@@ -32,20 +32,12 @@ public class EnemyController : MonoBehaviour
 
         if (distanceToPlayer < detectionRange)
         {
+            
+            if (player.position.x > transform.position.x) Flip(true);
+            else Flip(false);
+
             Vector2 direction = (player.position - transform.position).normalized;
-
-            if (direction.x < 0 && mirandoDerecha)
-            {
-                Flip();
-            }
-            if (direction.x > 0 && !mirandoDerecha)
-            {
-                Flip();
-
-            }
-
             movement = new Vector2(direction.x, direction.y);
-
             enMovimiento = true;
         }
         else
@@ -69,11 +61,11 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    void Flip()
+    void Flip(bool derecha)
     {
-        mirandoDerecha = !mirandoDerecha;
         Vector3 scale = transform.localScale;
-        scale.x *= -1;
+        if (derecha) scale.x = 1;
+        else scale.x = -1;
         transform.localScale = scale;
     }
 
