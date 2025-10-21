@@ -13,8 +13,10 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector2 lastMove;
 
-    private float fueraRebote = 5f;
+    private float fueraRebote = 4f;
     private bool recibeDanio;
+
+    private bool atacando;
 
     void Start()
     {
@@ -35,6 +37,11 @@ public class PlayerMovement : MonoBehaviour
             lastMove = moveImput;
         }
 
+        if (Input.GetKeyDown(KeyCode.E) && !atacando)
+        {
+            Atacando();
+        }
+
         // Actualizar las variables del Animator
         playerAnimator.SetFloat("Horizontal", moveX);
         playerAnimator.SetFloat("Vertical", moveY);
@@ -42,11 +49,13 @@ public class PlayerMovement : MonoBehaviour
         playerAnimator.SetFloat("LastMoveHorizontal", lastMove.x);
         playerAnimator.SetFloat("LastMoveVertical", lastMove.y);
         playerAnimator.SetBool("RecibeDanio", recibeDanio);
+        playerAnimator.SetBool("Atacando", atacando);
     }
 
     private void FixedUpdate()
     {   
         // Movimiento del jugador
+        if (recibeDanio) return;
         playerRb.MovePosition(playerRb.position + moveImput * speed * Time.fixedDeltaTime);
     }
 
@@ -57,11 +66,27 @@ public class PlayerMovement : MonoBehaviour
         {
             recibeDanio = true;
             // Aplicar una fuerza de rebote en la dirección opuesta al daño recibido
-            Vector2 rebote = new Vector2(transform.position.x - direccion.x, 1).normalized;
+            Vector2 rebote = ((Vector2)transform.position - direccion).normalized;
+
+            playerAnimator.SetFloat("LastMoveHorizontal", rebote.x);
+            playerAnimator.SetFloat("LastMoveVertical", rebote.y);
+            playerAnimator.SetBool("RecibeDanio", true);
+            
+
             playerRb.AddForce(rebote * fueraRebote, ForceMode2D.Impulse);
         }
 
         // Aquí puedes agregar lógica para reducir la salud del jugador
+    }
+
+    public void Atacando()
+    {
+        atacando = true;
+    }
+
+    public void NoAtacando()
+    {
+        atacando = false;
     }
     
     public void desactivarDanio()

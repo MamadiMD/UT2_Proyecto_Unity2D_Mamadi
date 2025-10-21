@@ -15,6 +15,9 @@ public class EnemyController : MonoBehaviour
     private Animator animator;
     private bool mirandoDerecha = true;
 
+    private bool puedeHacerDanio = true;
+    public float tiempoEntreGolpes = 1f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -53,7 +56,19 @@ public class EnemyController : MonoBehaviour
         rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
         animator.SetBool("enMovimiento", enMovimiento);
     }
-    
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (puedeHacerDanio && collision.gameObject.CompareTag("Player"))
+        {
+            puedeHacerDanio = false;
+            Vector2 direccionDanio = (collision.transform.position - transform.position).normalized;
+
+            collision.gameObject.GetComponent<PlayerMovement>().RecibeDanio(direccionDanio, 1);
+            StartCoroutine(ReiniciarGolpe());
+        }
+    }
+
     void Flip()
     {
         mirandoDerecha = !mirandoDerecha;
@@ -62,9 +77,16 @@ public class EnemyController : MonoBehaviour
         transform.localScale = scale;
     }
 
-    void OnDrawGizmosSelected() {
+    void OnDrawGizmosSelected()
+    {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, detectionRange);
-        
+
+    }
+    
+    private IEnumerator ReiniciarGolpe()
+    {
+        yield return new WaitForSeconds(tiempoEntreGolpes);
+        puedeHacerDanio = true;
     }
 }
