@@ -3,26 +3,58 @@ using System.Collections.Generic;
 using UnityEditor.Tilemaps;
 using UnityEngine;
 
-public class FollowIA : MonoBehaviour
+
+public class EnemyFollow : MonoBehaviour
 {
-    // Start is called before the first frame update
-    [SerializeField] private Transform player;
+    public Transform player;
+    public float chaseRange = 5f;
+    public float stoppingDistance = 0.5f;
+    public float speed = 3f;
 
-    private bool isFacingRight = true;
-    void Update()
-    {
-        bool isPlayerRight = transform.position.x < player.transform.position.x;
-        Flip(isPlayerRight);
-    }
+    private Rigidbody2D rb;
+    private Animator animator;
 
-    private void Flip(bool isPlayerRight)
+    void Awake()
     {
-        if ((isFacingRight && !isPlayerRight) || (!isFacingRight && isPlayerRight))
+        rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+
+        if (player == null)
         {
-            isFacingRight = !isFacingRight;
-            Vector3 scale = transform.localScale;
-            scale.x *= -1;
-            transform.localScale = scale;
+            var go = GameObject.FindGameObjectWithTag("Player");
+            if (go) player = go.transform;
         }
     }
+
+    void FixedUpdate()
+    {
+        if (player == null) return;
+
+        Vector2 pos = rb.position;
+        Vector2 target = player.position;
+        float dist = Vector2.Distance(pos, target);
+        Vector2 dir = Vector2.zero;
+
+        // Solo moverse si el jugador está dentro del rango
+        if (dist <= chaseRange && dist > stoppingDistance)
+        {
+            dir = (target - pos).normalized;
+            Vector2 move = dir * speed * Time.fixedDeltaTime;
+            rb.MovePosition(pos + move);
+        }
+
+        // Actualizar Animator
+        bool moving = dir != Vector2.zero;
+        animator.SetBool("isMoving", moving);
+        animator.SetFloat("moveX", dir.x);
+        animator.SetFloat("moveY", dir.y);
+    }
+
+    void OnDrawGizmosSelected()
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, chaseRange);
+
+        }
 }
+    
