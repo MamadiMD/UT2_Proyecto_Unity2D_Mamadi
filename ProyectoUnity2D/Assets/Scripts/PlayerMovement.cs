@@ -22,6 +22,8 @@ public class PlayerMovement : MonoBehaviour
     private SworHitbox hitboxLeft;
     private SworHitbox hitboxRight;
 
+    
+
     void Start()
     {
         playerRb = GetComponent<Rigidbody2D>();
@@ -31,6 +33,10 @@ public class PlayerMovement : MonoBehaviour
         hitboxDown = hitboxDown.GetComponent<SworHitbox>();
         hitboxLeft = hitboxLeft.GetComponent<SworHitbox>();
         hitboxRight = hitboxRight.GetComponent<SworHitbox>();
+
+        
+
+        
 
         DesactivarHitboxes();
     }
@@ -100,7 +106,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void ActivarHitbox()
     {
-        DesactivarHitboxes();
+        // DesactivarHitboxes();
 
         if (Mathf.Abs(lastMove.x) > Mathf.Abs(lastMove.y))
         {

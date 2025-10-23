@@ -48,6 +48,8 @@ public class EnemyFollow : MonoBehaviour
         animator.SetBool("isMoving", moving);
         animator.SetFloat("moveX", dir.x);
         animator.SetFloat("moveY", dir.y);
+
+        transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), Mathf.Abs(transform.localScale.y), transform.localScale.z);
     }
 
     void OnDrawGizmosSelected()
