@@ -35,7 +35,7 @@ public class EnemyHitReaction : MonoBehaviour
 
     private IEnumerator ResetHit()
     {
-        yield return new WaitForSeconds(0.4f); // Duración de la animación
+        yield return new WaitForSeconds(0.1f); // Duración de la animación
         animator.SetBool("isHit", false);
     }
 }

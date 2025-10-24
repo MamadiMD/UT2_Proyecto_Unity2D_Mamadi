@@ -331,6 +331,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 4
   attackDuration: 0.4
+  hitboxUp: {fileID: 1876232972}
+  hitboxDown: {fileID: 1076428165}
+  hitboxLeft: {fileID: 1304037837}
+  hitboxRight: {fileID: 1679937576}
 --- !u!50 &22445123
 Rigidbody2D:
   serializedVersion: 4

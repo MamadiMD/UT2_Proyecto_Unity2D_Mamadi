@@ -15,12 +15,12 @@ public class PlayerMovement : MonoBehaviour
     private bool recibeDanio;
 
     private bool atacando;
-    public float attackDuration = 0.4f;
+    public float attackDuration = 0.1f;
 
-    private SworHitbox hitboxUp;
-    private SworHitbox hitboxDown;
-    private SworHitbox hitboxLeft;
-    private SworHitbox hitboxRight;
+    [SerializeField] private SworHitbox hitboxUp;
+    [SerializeField] private SworHitbox hitboxDown;
+    [SerializeField] private SworHitbox hitboxLeft;
+    [SerializeField] private SworHitbox hitboxRight;
 
     
 
@@ -91,8 +91,17 @@ public class PlayerMovement : MonoBehaviour
             playerAnimator.SetBool("RecibeDanio", true);
 
             playerRb.AddForce(rebote * fueraRebote, ForceMode2D.Impulse);
+            StartCoroutine(ResetearDanio());
         }
 
+    }
+
+    private IEnumerator ResetearDanio()
+    {
+        yield return new WaitForSeconds(0.3f);
+        playerRb.velocity = Vector2.zero;
+        recibeDanio = false;
+        playerAnimator.SetBool("RecibeDanio", false);
     }
 
     private IEnumerator AtacandoCoroutine()

@@ -13,6 +13,7 @@ public class EnemyFollow : MonoBehaviour
 
     private Rigidbody2D rb;
     private Animator animator;
+    private bool puedeHacerDanio = true;
 
     void Awake()
     {
@@ -49,7 +50,10 @@ public class EnemyFollow : MonoBehaviour
         animator.SetFloat("moveX", dir.x);
         animator.SetFloat("moveY", dir.y);
 
-        transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), Mathf.Abs(transform.localScale.y), transform.localScale.z);
+
+        transform.localScale = new Vector3(dir.x >= 0 ? 1 : -1, 1, 1);
+
+       
     }
 
     void OnDrawGizmosSelected()
@@ -58,5 +62,24 @@ public class EnemyFollow : MonoBehaviour
             Gizmos.DrawWireSphere(transform.position, chaseRange);
 
         }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (puedeHacerDanio && collision.gameObject.CompareTag("Player"))
+        {
+            puedeHacerDanio = false;
+            Vector2 direccionDanio = (collision.transform.position - transform.position).normalized;
+
+            collision.gameObject.GetComponent<PlayerMovement>().RecibeDanio(direccionDanio, 1);
+            StartCoroutine(ReiniciarGolpe());
+        }
+    }
+
+
+    private IEnumerator ReiniciarGolpe()
+    {
+        yield return new WaitForSeconds(3f);
+        puedeHacerDanio = true;
+    }
 }
     
