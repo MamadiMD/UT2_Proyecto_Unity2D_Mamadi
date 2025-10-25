@@ -6,7 +6,7 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour
 {
     public Transform player;
-    public float detectionRange = 5.0f;
+    public float detectionRange = 4.0f;
     public float moveSpeed = 2.0f;
 
     private Rigidbody2D rb;

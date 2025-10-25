@@ -63,14 +63,19 @@ public class EnemyFollow : MonoBehaviour
 
         }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (puedeHacerDanio && collision.gameObject.CompareTag("Player"))
+        if (puedeHacerDanio && collision.CompareTag("Player"))
         {
             puedeHacerDanio = false;
             Vector2 direccionDanio = (collision.transform.position - transform.position).normalized;
 
-            collision.gameObject.GetComponent<PlayerMovement>().RecibeDanio(direccionDanio, 1);
+            Debug.Log("⚔️ Enemigo golpea al jugador");
+
+            PlayerMovement playerScript = collision.GetComponent<PlayerMovement>();
+            if (playerScript != null)
+                playerScript.RecibeDanio(direccionDanio, 1);
+
             StartCoroutine(ReiniciarGolpe());
         }
     }
