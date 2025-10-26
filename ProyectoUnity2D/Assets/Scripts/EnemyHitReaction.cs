@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemyHitReaction : MonoBehaviour
 {
     private Animator animator;
-    [SerializeField] private float vida = 4f;
+     public float vida = 4f;
 
     void Awake()
     {

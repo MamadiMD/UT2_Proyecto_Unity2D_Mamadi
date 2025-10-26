@@ -22,6 +22,8 @@ public class PlayerMovement : MonoBehaviour
 
     private AudioSource musicaFondo; 
 
+    private AudioSource sonidoAtaque;
+
     [SerializeField] private SworHitbox hitboxUp;
     [SerializeField] private SworHitbox hitboxDown;
     [SerializeField] private SworHitbox hitboxLeft;
@@ -49,6 +51,8 @@ public class PlayerMovement : MonoBehaviour
         GameObject camara = GameObject.Find("Main Camera");
         if (camara != null)
             musicaFondo = camara.GetComponent<AudioSource>();
+
+        sonidoAtaque = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -127,6 +131,7 @@ public class PlayerMovement : MonoBehaviour
     {
         atacando = true;
         ActivarHitbox();
+        sonidoAtaque.Play();
         yield return new WaitForSeconds(attackDuration);
         DesactivarHitboxes();
         NoAtacando();

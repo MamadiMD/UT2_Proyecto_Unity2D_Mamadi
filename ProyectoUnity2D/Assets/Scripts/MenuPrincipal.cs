@@ -10,7 +10,7 @@ public class MenuPrincipal : MonoBehaviour
 
     private bool musicaPausada = false;
 
-
+    private bool isPaused = false;
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
@@ -45,6 +45,19 @@ public class MenuPrincipal : MonoBehaviour
         audioSource.Play();
         yield return new WaitForSeconds(audioSource.clip.length);
         Application.Quit();
+    }
+
+    public void pauseGame()
+    {
+        audioSource.Play();
+        if (isPaused)
+        {
+            isPaused = false;
+            Time.timeScale = 1f; // Reanuda el juego
+            return;
+        }
+        isPaused = true;
+        Time.timeScale = 0f; // Pausa el juego
     }
 
     //Método Pausar/Reanudar la música de fondo 
