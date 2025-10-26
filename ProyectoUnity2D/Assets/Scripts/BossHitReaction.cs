@@ -90,9 +90,10 @@ public class BossHitReaction : MonoBehaviour
         // Asegura que quede completamente invisible al final
         color.a = 0f;
         cinematicaFinal.color = color;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
 
         cinematicaFinal.gameObject.SetActive(false);
 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+        
     }
 }

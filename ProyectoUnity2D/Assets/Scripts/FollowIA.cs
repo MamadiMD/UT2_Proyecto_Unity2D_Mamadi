@@ -36,41 +36,41 @@ public class EnemyFollow : MonoBehaviour
         float dist = Vector2.Distance(pos, target);
         Vector2 dir = Vector2.zero;
 
+        // Siempre mirar hacia el jugador
+        if (player.position.x > transform.position.x)
+            transform.localScale = new Vector3(1, 1, 1);  // mira derecha
+        else
+            transform.localScale = new Vector3(-1, 1, 1); // mira izquierda
+
         // Solo moverse si el jugador está dentro del rango
         if (dist <= chaseRange && dist > stoppingDistance)
         {
             dir = (target - pos).normalized;
             Vector2 move = dir * speed * Time.fixedDeltaTime;
             rb.MovePosition(pos + move);
+
+            // Activar animación de movimiento
+            animator.SetBool("isMoving", true);
         }
-
-        // Actualizar Animator
-        bool moving = dir != Vector2.zero;
-        animator.SetBool("isMoving", moving);
-        animator.SetFloat("moveX", dir.x);
-        animator.SetFloat("moveY", dir.y);
-
-
-        transform.localScale = new Vector3(dir.x >= 0 ? 1 : -1, 1, 1);
-
-       
+        else
+        {
+            // No se mueve, desactivar animación
+            animator.SetBool("isMoving", false);
+        }
     }
 
     void OnDrawGizmosSelected()
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position, chaseRange);
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, chaseRange);
+    }
 
-        }
-
-     private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if (puedeHacerDanio && collision.CompareTag("Player"))
         {
             puedeHacerDanio = false;
             Vector2 direccionDanio = (collision.transform.position - transform.position).normalized;
-
-            Debug.Log("⚔️ Enemigo golpea al jugador");
 
             PlayerMovement playerScript = collision.GetComponent<PlayerMovement>();
             if (playerScript != null)
@@ -79,7 +79,6 @@ public class EnemyFollow : MonoBehaviour
             StartCoroutine(ReiniciarGolpe());
         }
     }
-
 
     private IEnumerator ReiniciarGolpe()
     {
